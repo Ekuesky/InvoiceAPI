@@ -1,0 +1,87 @@
+{% block content %}
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+<style>
+  .align-button {
+  height: calc(1.5em + .75rem + 2px);
+}
+</style>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6" style="width: 100%;">
+      <div class="card mt-5">
+        <div class="card-body">
+          <h2 class="card-title text-center">Créer une Facture</h2>
+          <form method="POST" id="invoiceForm">
+            {% csrf_token %}
+            <div class="mb-3">
+              {{ invoice_form.as_p }}
+            </div>
+
+            <div id="products-container"></div>
+
+            <button type="button" class="btn btn-primary mb-3" onclick="add_product()">Ajouter un produit</button>
+            <button type="submit" class="btn btn-success mb-3">Créer la facture</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let productCount = 0;
+
+  function add_product() {
+  productCount++;
+  const newProductDiv = `
+    <div class="form-group product-item mb-3" id="product-item-${productCount}">
+      <div class="row">
+        <div class="col-md-4">
+          <label for="category-${productCount}">Catégorie:</label>
+          <select class="form-control" id="category-${productCount}" name="category-${productCount}" onchange="updateProductOptions(${productCount})">
+            <option value="">Toutes les catégories</option>
+            {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="product-${productCount}">Produit:</label>
+          <select class="form-control" id="product-${productCount}" name="product-${productCount}-id">
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="quantity-${productCount}">Quantité:</label>
+          <input type="number" class="form-control" id="quantity-${productCount}" name="quantity-${productCount}" min="1" value="1">
+        </div>
+        <div class="col-md-1 d-flex align-items-center">
+          <button type="button" class="btn btn-danger align-button" onclick="remove_product(${productCount})">Retirer</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('products-container').innerHTML += newProductDiv;
+  updateProductOptions(productCount);
+}
+
+  function remove_product(productNumber) {
+    const productItemToRemove = document.getElementById(`product-item-${productNumber}`);
+    if (productItemToRemove) {
+      productItemToRemove.remove();
+    }
+  }
+
+  function updateProductOptions(productNumber) {
+    const categoryId = document.getElementById(`category-${productNumber}`).value;
+    const productSelect = document.getElementById(`product-${productNumber}`);
+    productSelect.innerHTML = '';
+
+    {% for product in products %}
+      if (categoryId === '' || categoryId === '{{ product.category.id }}') {
+        productSelect.innerHTML += `<option value="{{ product.id }}">{{ product.label }}</option>`;
+      }
+    {% endfor %}
+  }
+</script>
+{% endblock %}

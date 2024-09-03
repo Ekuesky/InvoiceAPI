@@ -1,0 +1,51 @@
+{% load mathfilters %}
+{% load invoice_filters %}
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6" style="width: 50%;">
+      <div class="card mt-5">
+        <div class="card-body">
+          <h2 class="card-title text-center">Détails de la Facture</h2>
+          <p class="mb-2"><strong>Client:</strong> {{ invoice.customer.get_full_name }}</p>
+          <p class="mb-2"><strong>Date:</strong> {{ invoice.date }}</p>
+          <p class="mb-2"><strong>Référence:</strong> {{ invoice.reference }}</p>
+          <p class="mb-2"><strong>Montant Total:</strong> {{ invoice.amount }}</p>
+
+          <h3 class="mt-4">Articles:</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix Unitaire</th>
+                <th>Total avec TVA</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for detail in invoice.details.all %}
+                <tr>
+                  <td>{{ detail.product.label }}</td>
+                  <td>{{ detail.quantity }}</td>
+                  <td>{{ detail.product.price }}</td>
+                  <td>
+                    {% calculer_prix_ttc detail.product.price detail.product.tva detail.quantity %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          <div class="text-center mt-4">
+            <a href="{% url 'generate_pdf_invoice' invoice.id %}" target="_blank" class="btn btn-primary">
+              Imprimer en PDF
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

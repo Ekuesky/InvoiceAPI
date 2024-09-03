@@ -1,0 +1,165 @@
+{% load mathfilters %}
+{% load invoice_filters %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Facture N° {{ invoice.reference }}</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .header {
+            background-color: #844caf; /* Couleur verte du header */
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between; /* Espace les éléments du header */
+            align-items: center; /* Aligner verticalement les éléments */
+        }
+
+        .header .title { /* Style pour le titre de la facture */
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .header .date {
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .company-info {
+            text-align: left;
+            margin-bottom: 20px;
+            size: 12px;
+        }
+
+        .customer-info {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        table.items {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.items th,
+        table.items td {
+            padding: 8px;
+            border: 1px solid #ddd; /* Bordure plus légère pour le tableau */
+        }
+
+        table.items th {
+            background-color: #f2f2f2; /* Gris clair pour l'en-tête */
+            font-weight: bold;
+        }
+
+        .total {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .total p {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Styles pour les sauts de page */
+        .page-break {
+            page-break-after: always;
+        }
+
+        /* Pour la pagination du tableau */
+        table {
+            page-break-inside: auto;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-md">
+
+        <div class="header">
+            <h1 class="title">Facture N° {{ invoice.reference }}</h1>
+            <p class="date">Facture du: {{ invoice.date }}</p>
+        </div>
+
+        <div class="row">
+            <div class="col-6 company-info">
+                <span class="">9 RUE DES</span><br>
+                <span class="">Tel:98635987</span><br>
+                <span class="">Email:contact@athomedigital.com</span><br>
+                <span class="">N°TVA Intra:2596</span>
+            </div>
+
+            <div class="col-6 customer-info">
+                <span><strong>CLIENT: {{ invoice.customer.first_name }} {{ invoice.customer.last_name }}</strong></span>
+            </div>
+        </div>
+
+        <table class="items">
+            <thead>
+                <tr>
+                    <th>DESCRIPTION</th>
+                    <th>QT</th>
+                    <th>P.U. HT</th>
+                    <th>TVA</th>
+                    <th>PRIX TTC</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in invoice.details %}
+                <tr>
+                    <td>{{ detail.product.label }}
+                        <p class="alert alert-dark fs-6">
+                            {{ detail.product.description }}
+                        </p>
+                    </td>
+                    <td>{{ detail.quantity }}</td>
+                    <td>{{ detail.product.price }}</td>
+                    <td>{{ detail.product.tva }}</td>
+                    <td>
+                        {% calculer_prix_ttc detail.product.price detail.product.tva detail.quantity %}
+                    </td>
+                </tr>
+
+                {% if forloop.counter|divisibleby:10 %}
+                </tbody>
+        </table>
+        <div style="page-break-after: always;"></div>
+        <table class="items" style="page-break-before: always;">
+            <thead>
+                <tr>
+                    <th>DESCRIPTION</th>
+                    <th>QT</th>
+                    <th>P.U. HT</th>
+                    <th>TVA</th>
+                    <th>PRIX TTC</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total">
+            <p>Total: {{ invoice.amount }}</p>
+        </div>
+
+    </div>
+
+    {% bootstrap_javascript %}
+</body>
+</html>
