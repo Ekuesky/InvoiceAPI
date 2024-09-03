@@ -52,7 +52,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.save()
 
         # create a new email address for the user registered
-        setup_user_email(request, user, [])
+        #setup_user_email(request, user, [])
 
         user.email = self.cleaned_data.get("email")
         user.password = self.cleaned_data.get("password1")
