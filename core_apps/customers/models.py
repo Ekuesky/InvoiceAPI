@@ -1,5 +1,5 @@
 from django.db import models
-from backend.core_apps.common.models import TimeStampedModel
+from core_apps.common.models import TimeStampedModel
 from django_countries.fields import CountryField
 from django.contrib.auth import get_user_model
 from phonenumber_field.modelfields import PhoneNumberField
@@ -14,11 +14,13 @@ class Customer(TimeStampedModel):
     last_name = models.CharField(max_length=200)
     address = models.TextField()
     postal_code = models.CharField(max_length=100)
-    CountryField(
+    country = CountryField(
         verbose_name=_("country"), default=_("TG"), blank=False, null=False
     )
     email = models.EmailField(db_index=True, unique=True)
-    phone_number = PhoneNumberField(verbose_name=_("phone number"), max_length=30, default="+22891271298" )
+    phone_number = PhoneNumberField(verbose_name=_(" first phone number"), max_length=30, default="+22891271298" )
+    phone_number2 = PhoneNumberField(verbose_name=_(" second phone number"), max_length=30, null=True )
+
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

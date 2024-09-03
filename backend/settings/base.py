@@ -42,6 +42,9 @@ THIRD_APPS = [
     "rest_framework.authtoken",
     "dj_rest_auth",
     "dj_rest_auth.registration",
+    "mathfilters",
+    "bootstrap5",
+    "django.contrib.messages"
 ]
 
 LOCAL_APPS = [
@@ -153,6 +156,10 @@ MEDIA_ROOT = os.path.join(ROOT_DIR, "mediafiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_URLS_REGEX = r"^/api/.*$"
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+]
 
 # Define the user model
 AUTH_USER_MODEL = "users.User"
