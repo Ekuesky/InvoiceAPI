@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ajouter produit</title>
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+</head>
+<body class="center" style="margin:auto;width: 50%">
+
+<h1 style="margin-bottom: 30px;">Ajouter produit</h1>
+
+    <form method="POST" action="{% url 'product_add' %}" class="form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="form-group">
+      {% for field in form %}
+        {% if field.name != 'category' %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="invalid-feedback">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                <select name="category" id="category" class="form-select">
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category.id == form.initial.category_id %} selected {% endif %}>
+                            {{ category.label }}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if field.errors %}
+                    <div class="invalid-feedback">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+      {% endfor %}
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Save</button>
+    </form>
+{% bootstrap_javascript %}
+</body>
+</html>

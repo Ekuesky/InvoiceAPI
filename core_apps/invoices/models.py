@@ -20,11 +20,10 @@ class Invoice(TimeStampedModel):
             current_date = date.today()
             self.date = current_date
 
-
-        if not self.reference:
-            hash_input = f"{self.date.month}-{self.date.day}"
-            reference_hash = hashlib.sha256(hash_input.encode()).hexdigest()
-            self.reference = reference_hash[:8].upper()
+        # if not self.reference:
+        #     hash_input = f"{self.date.month}-{self.date.day}"
+        #     reference_hash = hashlib.sha256(hash_input.encode()).hexdigest()
+        #     self.reference = reference_hash[:8].upper()+'-'+str(self.pk)
 
         super().save(*args, **kwargs)
 

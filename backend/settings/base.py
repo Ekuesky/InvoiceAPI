@@ -44,7 +44,7 @@ THIRD_APPS = [
     "dj_rest_auth.registration",
     "mathfilters",
     "bootstrap5",
-    "django.contrib.messages"
+'crispy_forms',
 ]
 
 LOCAL_APPS = [

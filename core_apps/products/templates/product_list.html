@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Product List</title>
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+</head>
+<body style="margin-left: 30px">
+
+<h1>Liste des produits</h1>
+
+<a href="{% url 'product_add' %}" class="btn btn-primary">Ajouter produit</a>
+
+<table class="table" style="width: 80%; margin: 0 auto;">
+  <thead>
+    <tr>
+      <th>Label</th>
+      <th>Brand</th>
+      <th>Price</th>
+      <th>Reference</th>
+      <th>Description</th>
+      <th>TVA</th>
+      <th>Category</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in products %}
+    <tr>
+      <td>{{ product.label }}</td>
+      <td>{{ product.brand }}</td>
+      <td>{{ product.price }}</td>
+      <td>{{ product.reference }}</td>
+      <td>{{ product.description }}</td>
+      <td>{{ product.tva }}</td>
+      <td>{{ product.category.label }}</td>
+      <td>
+          <a href="{% url 'product_edit' product.id %}" class="btn btn-sm btn-warning">Modifier</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Pagination -->
+<div class="pagination" style="text-align: center;">
+    <span class="step-links">
+        {% if products.has_previous %}
+            <a href="?page=1" class="btn btn-outline-info">« first</a>
+            <a href="?page={{ products.previous_page_number }}" class="btn btn-outline-info">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ products.number }} of {{ products.paginator.num_pages }}.
+        </span>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}" class="btn btn-outline-info">next</a>
+            <a href="?page={{ products.paginator.num_pages }}" class="btn btn-outline-info">last »</a>
+        {% endif %}
+    </span>
+</div>
+
+{% bootstrap_javascript %}
+</body>
+</html>

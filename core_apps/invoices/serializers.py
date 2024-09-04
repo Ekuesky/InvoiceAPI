@@ -1,3 +1,5 @@
+import hashlib
+
 from rest_framework import serializers
 from .models import Invoice, InvoiceDetail
 from core_apps.customers.serializers import CustomerSerializer
@@ -81,7 +83,14 @@ class CreateInvoiceSerializer(serializers.ModelSerializer):
                 invoice.amount = 0
                 for detail in invoice.details.all():
                     invoice.amount += detail.product.price * (1+detail.product.tva)* detail.quantity
+
                 invoice.save()
+
+                if not invoice.reference:
+                    hash_input = f"{invoice.date.month}-{invoice.date.day}"
+                    reference_hash = hashlib.sha256(hash_input.encode()).hexdigest()
+                    invoice.reference = reference_hash[:8].upper() + '-' + str(invoice.pk)
+                    invoice.save()
 
                 invoice_data = super().to_representation(invoice)
                 invoice_data['id'] = invoice.id

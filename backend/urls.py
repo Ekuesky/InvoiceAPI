@@ -15,6 +15,7 @@ from core_apps.users.views import CustomRegisterView
 #web
 from core_apps.invoices.web.views import Create_invoice, Invoice_detail
 from core_apps.customers.web.views import Create_customer, Customer_list
+from core_apps.products.web.views import Add_product, Product_list, Product_edit
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -48,8 +49,9 @@ urlpatterns = [
     path('web/invoices/<int:pk>/', Invoice_detail, name='invoice_detail'),
     path('web/customers/', Customer_list, name='customer_list'),
     path('web/customers/create', Create_customer, name='create_customer'),
-
-
+    path('web/products/', Product_list, name='product_list'),
+    path('web/products/add/', Add_product, name='product_add'),
+    path('web/products/<uuid:product_id>/edit/', Product_edit, name='product_edit'),
 ]
 
 admin.site.site_header = "Administration"
