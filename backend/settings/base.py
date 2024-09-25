@@ -17,7 +17,9 @@ APP_DIR = os.path.join(ROOT_DIR, "core_apps")
 # Application definition
 
 DJANGO_APPS = [
+
     "whitenoise.runserver_nostatic",
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,7 +46,8 @@ THIRD_APPS = [
     "dj_rest_auth.registration",
     "mathfilters",
     "bootstrap5",
-'crispy_forms',
+    'crispy_forms',
+
 ]
 
 LOCAL_APPS = [
